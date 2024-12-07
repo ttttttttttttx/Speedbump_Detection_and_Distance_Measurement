@@ -20,7 +20,6 @@ conda activate yolov8
 
 ```
 pip install ultralytics
-pip install -e.
 ```
 
 其他所需的依赖项如opencv等，请根据需要添加。
