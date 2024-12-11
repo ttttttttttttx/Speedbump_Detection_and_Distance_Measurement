@@ -1,75 +1,58 @@
-from ultralytics import YOLO
 import cv2
-from utils.split_video_and_undistort import split_video_to_undistroted_frames
-from utils.generate_video import generate_video_from_frames
 import numpy as np
+from ultralytics import YOLO
+from utils.generate_video import generate_video_from_frames
+from utils.split_video_and_undistort import split_video_to_undistroted_frames
 
+# Program Entry #
+if __name__ == '__main__':
 
-# Video Distortion Correction
-video_path = "capturedVideo/test3.mp4"  # the path is an original video
-split_video_to_undistroted_frames(video_path)
+    # Process video into undistroted frames
+    video_path = "./captured_video/test1.mp4"
+    split_video_to_undistroted_frames(video_path)
 
-# Loading the YOLOv8 model I trained
-model = YOLO("speedbump.pt")
+    # Load YOLOv8 model
+    model = YOLO("speedbump.pt") # "speedbump.pt" is the model file
 
-# Display only speed bumps: Speed bump corresponds to class=1
-# Do not show labels, do not show confidence scores
-# Source can be an image, a video, or a folder
+    # YOLO model prediction to show speedbumps
+    results = model.predict(source="undistorted_frames", save=False,
+                    classes=1, show_labels=False, show_conf=False)
 
-# test data
-#results = model.predict(source="test_images", save=False, classes=1, show_labels=False, show_conf=False)
+    # Iterate through the results
+    for i, result in enumerate(results):
+        # Read the image
+        image = cv2.imread(result.path)
 
-# real data
-results = model.predict(source="undistorted_image", save=False, classes=1, show_labels=False, show_conf=False)
+        # Iterate through all speedbumps in the image
+        for xyxy in result.boxes.xyxy:  
+            # Coordinates in format [xmin, ymin, xmax, ymax]
+            corners = xyxy.tolist()
+            x_min, y_min, x_max, y_max = map(int, corners)
 
-# 'result' is the detection result for one image
-# 'results' contains detection results for all images
-# 'index' is the current iteration count
-for index, result in enumerate(results):
-    # Get the image corresponding to this detection result
-    path = result.path
-    # print(path)
-    image = cv2.imread(path)
+            # Draw a green rectangle box
+            cv2.rectangle(image, (x_min, y_min), (x_max, y_max), (0, 0, 255), 3)
 
-    # Iterate through all detection boxes (speed bumps) in the image
-    for xyxy in result.boxes.xyxy:
-        # 'corners' stores the corner coordinates of a speed bump in the format [xmin, ymin, xmax, ymax]
-        corners = xyxy.tolist()
+            # The center point of speedbump
+            x_mid = (x_min + x_max) / 2
+            y_mid = (y_min + y_max) / 2
+            H = np.load('configs/H_matrix.npy') 
+            mid_point = np.array([[x_mid, y_mid]], dtype=np.float32) 
 
-        # Extract vertex coordinates from 'corners'
-        xmin, ymin, xmax, ymax = map(int, corners)
+            # Apply H to the center point
+            trans_point = cv2.perspectiveTransform(mid_point.reshape(1, -1, 2), H)
+            y_mid_transformed = trans_point[0][0][1] # transformed y-coordinate
 
-        # Draw a rectangle on the image
-        cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)  # (0, 255, 0) 是绿色，2 是矩形的边框宽度
+            # Distance
+            distance = y_mid_transformed
 
-        # Calculate the distance of the speed bump
-        xcenter = (xmin+xmax)/2
-        ycenter = (ymin + ymax) / 2
-        loaded_H = np.load('configs/H_matrix.npy')
-        point_to_transform = np.array([[xcenter, ycenter]], dtype=np.float32)
+            # Add distance above the rectangle box
+            text = "distance=" + str(distance)
+            cv2.putText(image, text, (x_min, y_min-10), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3, cv2.LINE_AA)
 
-        # Apply homography matrix to the point
-        transformed_point = cv2.perspectiveTransform(point_to_transform.reshape(1, -1, 2), loaded_H)
-        # Get the y-coordinate of the mapped point
-        y_coordinate_transformed = transformed_point[0][0][1]
+        # Save the image 
+        save_path = "marked_frames\\" + str(i) + ".jpg"
+        cv2.imwrite(save_path, image)
 
-        distance = y_coordinate_transformed
-
-        # Add text above the rectangle
-        text = "distance=" + str(distance)
-        cv2.putText(image, text, (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
-
-    # Display the image with rectangles
-    # cv2.imshow("Image with Bounding Boxes", image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
-    # Save the marked image in the 'marked_images' folder
-    save_path = "marked_images\\" + str(index) + ".jpg"
-    cv2.imwrite(save_path, image)
-
-# Save the images with detected and measured speed bumps in the 'marked_images' folder
-
-# Combine the images in the 'marked_images' folder into a video
-output_video_path = "./generated_video/generated_video.mp4"
-generate_video_from_frames(output_video_path, 20.0)
+    # Combine the marked images into a video
+    output_video_path = "./generated_video/generated_video.mp4"
+    generate_video_from_frames(output_video_path, 20.0)
