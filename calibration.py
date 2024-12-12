@@ -61,7 +61,7 @@ def camera_calibration():
             cv2.cornerSubPix(image_gray, corners, (3, 3), (-1, -1), subpix_criteria)
             # Draw corners and save
             img_corners = cv2.drawChessboardCorners(image, board_size, corners, True)
-            save_path = os.path.join("./calibration_corners_images", f"{i}_corners.jpg")
+            save_path = os.path.join("./calibration_corners_images", f"{i+1 :03d}_corners.jpg")
             cv2.imwrite(save_path, img_corners) 
 
     # Calibrate using the fisheye model
@@ -74,7 +74,7 @@ def camera_calibration():
 
     print("Camera intrinsic matrix (K): \n", K)
     print("\nDistortion coefficients (D): \n", D)
-    print("\nRoot Mean Square Error (rms): ", rms) # < 0.5 indicates good calibration
+    print("\nRoot Mean Square Error (rms): ", rms, '\n') # < 0.5 indicates good calibration
 
     # Save camera parameters
     output_filename = "./configs/camera_intrinsic.py"
