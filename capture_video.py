@@ -6,6 +6,8 @@ from configs.camera_intrinsic import cameraMatrix, distCoeff
 def capture_video(output_folder):
     # Open an external camera
     inputVideo = cv2.VideoCapture(1)
+    inputVideo.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  
+    inputVideo.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080) 
     if not inputVideo.isOpened():
         print("Error: Could not open camera at index 1.")
 
@@ -37,6 +39,8 @@ def capture_video(output_folder):
 def undistort_video(output_folder):
     # Open an external camera
     inputVideo = cv2.VideoCapture(1)
+    inputVideo.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  
+    inputVideo.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080) 
     if not inputVideo.isOpened():
         print("Error: Could not open camera at index 1.")
 

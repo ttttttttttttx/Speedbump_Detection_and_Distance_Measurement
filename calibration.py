@@ -110,6 +110,8 @@ if __name__ == '__main__':
     # Capture images #
     if select == '1':
         cap = cv2.VideoCapture(1) # open external camera
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080) 
         if cap.isOpened():
             # capture("./calibration_images", 15, cap, isPreClean=True) # clean folder
             capture("./calibration_images", 15, cap, isPreClean=False) # not clean folder

@@ -15,8 +15,8 @@ if __name__ == '__main__':
     model = YOLO("speedbump.pt") # "speedbump.pt" is the model file
 
     # YOLO model prediction to show speedbumps
-    results = model.predict(source="undistorted_frames", save=False,
-                    classes=1, show_labels=False, show_conf=False)
+    results = model.predict(source="undistorted_frames", save=False, # classes=1,
+                            show_labels=False, show_conf=False)
 
     # Iterate through the results
     for i, result in enumerate(results):
