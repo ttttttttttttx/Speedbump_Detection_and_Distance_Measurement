@@ -8,7 +8,7 @@ from utils.split_video_and_undistort import split_video_to_undistroted_frames
 if __name__ == '__main__':
 
     # Process video into undistroted frames
-    video_path = "./captured_video/test1.mp4"
+    video_path = "./captured_video/test3.mp4"
     split_video_to_undistroted_frames(video_path)
 
     # Load YOLOv8 model
