@@ -8,7 +8,7 @@ from utils.split_video_and_undistort import split_video_to_undistroted_frames
 if __name__ == '__main__':
 
     # Process video into undistroted frames
-    video_path = "./captured_video/test3.mp4"
+    video_path = "./captured_video/test1.mp4"
     split_video_to_undistroted_frames(video_path)
 
     # Load YOLOv8 model
@@ -46,7 +46,7 @@ if __name__ == '__main__':
             distance = y_mid_transformed
 
             # Add distance above the rectangle box
-            text = "distance=" + str(distance)
+            text = "distance=" + str(distance) + "cm"
             cv2.putText(image, text, (x_min, y_min-10), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3, cv2.LINE_AA)
 
         # Save the image 
