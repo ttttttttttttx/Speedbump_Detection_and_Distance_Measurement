@@ -70,9 +70,13 @@ def undistort_video(output_folder):
             file_undistorted_video.write(undistorted_frame)
             file_origin_video.write(oriframe)
 
+            # Resize frames for display
+            display_frame = cv2.resize(undistorted_frame, (640, 360))
+            display_oriframe = cv2.resize(oriframe, (640, 360))
+
             # Display video frames
-            cv2.imshow("Original Video", oriframe)
-            cv2.imshow("Undistorted Video", undistorted_frame)
+            cv2.imshow("Original Video", display_oriframe)
+            cv2.imshow("Undistorted Video", display_frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

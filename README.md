@@ -1,4 +1,6 @@
-# 减速带检测和测距
+# CV 课程项目
+
+## 减速带检测和测距
 
 ### 一、编译环境
 
@@ -8,7 +10,7 @@
 
 使用命令行，创建用于运行 YOLOv8 的虚拟环境并激活
 
-```
+```cmd
 conda create -n yolov8 python=3.8
 conda activate yolov8
 ```
@@ -17,7 +19,7 @@ conda activate yolov8
 
 执行以下命令安装所需依赖项：
 
-```
+```cmd
 pip install ultralytics
 ```
 
@@ -56,6 +58,8 @@ Conda 可执行文件：`(自己的下载地址)\anaconda3\Scripts\conda.exe`
 - captured_video：直接拍摄的视频
 
 - captured_undistorted_video：拍摄的视频和去畸变后的视频
+  
+- captured_detected_video：拍摄的视频和进行减速带识别、测距的视频
 
 - calibration_images：相机标定所用棋盘格图片
 
@@ -83,7 +87,9 @@ Conda 可执行文件：`(自己的下载地址)\anaconda3\Scripts\conda.exe`
   
 - capture_video.py：拍摄视频（可同时生成去畸变视频）
   
-- detect.py：实现减速带检测和测距功能，生成视频结果
+- detect.py：实现减速带检测和测距功能，生成视频（对拍摄好的视频）
+
+- capture_detect.py：实时拍摄并进行减速带的检测和测距
   
 - homography.py：通过地面瓷砖图片生成变换矩阵H
   

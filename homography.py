@@ -29,7 +29,8 @@ def mark_points():
     cv2.setMouseCallback("groundBoard", click_corner)
 
     while (1):
-        cv2.imshow("groundBoard", img)
+        display_img = cv2.resize(img, (1280, 720))
+        cv2.imshow("groundBoard", display_img)
         key = cv2.waitKey(1) & 0xff 
         
         if key == ord('q') or key == ord('Q'):
