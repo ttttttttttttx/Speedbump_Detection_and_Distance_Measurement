@@ -7,7 +7,7 @@ from configs.camera_intrinsic import cameraMatrix, distCoeff
 # Global Variables #
 result = None
 frame_count = 0
-skip_frames = 100 
+skip_frames = 20 
 
 # Detect SpeedBumps of a Frame #
 def detect_frame(frame):
@@ -42,7 +42,7 @@ def detect_frame(frame):
 
         # Add distance above the rectangle box
         text = "distance=" + str(distance) + "cm"
-        cv2.putText(frame, text, (x_min, y_min-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+        cv2.putText(frame, text, (x_min, y_min-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
 
     return frame
 

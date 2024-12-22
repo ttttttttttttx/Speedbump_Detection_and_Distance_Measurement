@@ -4,8 +4,8 @@ import numpy as np
 # 2D point coordinates in the image
 imgps = [] # the clicked corners
 # 2D point coordinates in the real world
-objps = np.array([[-60, 120], [0, 120], [0, 240], 
-                  [0, 300], [120, 240],  [120, 300]])
+objps = np.array([[0, 240], [0, 300], [-60, 240], 
+                  [-60, 300], [120, 240],  [120, 300]])
 
 # Mouse Callback #
 def click_corner(event, x, y, flags, param):
@@ -29,8 +29,7 @@ def mark_points():
     cv2.setMouseCallback("groundBoard", click_corner)
 
     while (1):
-        display_img = cv2.resize(img, (1280, 720))
-        cv2.imshow("groundBoard", display_img)
+        cv2.imshow("groundBoard", img)
         key = cv2.waitKey(1) & 0xff 
         
         if key == ord('q') or key == ord('Q'):
@@ -44,7 +43,7 @@ def mark_points():
 # Program Entry #
 if __name__ == '__main__':
     # Mark points on the groundBoard image
-    image_path = './marked_points_image/011_undistorted.jpg'
+    image_path = './marked_points_image/1_undistorted.jpg'
     img = cv2.imread(image_path)
     mark_points()
 
